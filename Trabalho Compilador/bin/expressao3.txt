@@ -1,0 +1,7 @@
+START a123;
+int a2;
+>> a1 <- x2 + s123; 
+FOR >> (a1+a2) <a3;;
+ IF v3 <> t1<<
+IF a2 > a1 THEN a3 < -3+3;; ELSE a3 <- 3+3;;<<
+

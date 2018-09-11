@@ -1,0 +1,4 @@
+START a123;
+int a2;
+>>FOR a3 <- 2+5 TO v3 <> t1<<
+IF a2 > a1 THEN a3 < -3+3;; ELSE a3 <- 3+3;;<<

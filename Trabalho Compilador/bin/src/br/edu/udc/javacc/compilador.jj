@@ -1,0 +1,119 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = true;}PARSER_BEGIN(compilador)package br.edu.udc.javacc;
+
+import br.edu.udc.filereader.FileReader;
+import java.io.*;
+
+public class compilador{  public static void main(String args []) throws ParseException, FileNotFoundException  {
+    FileReader fr = new FileReader();
+	String code = fr.getCode();
+    
+    InputStream is = new ByteArrayInputStream(code.getBytes());    compilador parser = new compilador(is);    try {
+		parser.START();
+		System.out.println("Sequencia correta");
+      }
+      catch(Exception ex) {
+			ex.printStackTrace();
+        }
+      catch(Error er) {
+			er.printStackTrace();
+        }  }}PARSER_END(compilador)SKIP :{  " "| "\r"| "\t"| "\n"}
+
+
+
+TOKEN:///IDENTIFICADOR
+{
+ <IDENTIFICADOR:<LETRA><NUMERO>>
+}
+
+TOKEN: ///NUMERO
+{
+	<NUMERO:(<DIGITO>)+>
+}
+
+TOKEN:///DIGITO
+{
+	<#DIGITO:(["0"-"9"])>
+}
+
+TOKEN:///LETRA
+{
+	<#LETRA:(["a"-"z"])|(["A"-"Z"])>
+}
+
+TOKEN:///TIPO
+{
+	<TIPO:"int"|"float"|"varchar">
+}
+
+TOKEN:///OPERADOR_MATEMATICO
+{
+	<OPERADOR_MATEMATICO: "+"|"-"|"/"|"*">
+}
+
+TOKEN:///OPERADOR_LOGICO
+{
+	<OPERADOR_LOGICO: "="|" >"|"<"|"<>"|"<="|" >=">
+
+}
+
+
+
+void START():
+{}
+{
+	"START"<IDENTIFICADOR>";"BLOCO()
+}
+
+void BLOCO():
+{}
+{
+	DECLARACAO() ">>" COMANDO() | ">>" COMANDO()
+}
+
+void DECLARACAO():
+{}
+{
+	<TIPO>LISTA_IDENTIFICADORES()
+}
+
+void LISTA_IDENTIFICADORES():
+{}
+{
+	<IDENTIFICADOR>(";"|"," LISTA_IDENTIFICADORES())
+}
+
+void EXPRESSAO_MATEMATICA():
+{}
+{
+	EXTREMIDADE_EXPRESSAO()<OPERADOR_MATEMATICO>EXTREMIDADE_EXPRESSAO()
+}
+
+void EXTREMIDADE_EXPRESSAO():
+{}
+{
+	<IDENTIFICADOR>|<NUMERO>
+}
+
+void EXPRESSAO_LOGICA():
+{}
+{
+	EXTREMIDADE_EXPRESSAO()<OPERADOR_LOGICO>EXTREMIDADE_EXPRESSAO()
+}
+
+void COMANDO():{}
+{
+	<IDENTIFICADOR>"<-"EXPRESSAO_MATEMATICA()";"COMANDO()
+| 	"IF" EXPRESSAO_LOGICA() "THEN" COMANDO_INSIDE_IF()"ELSE"COMANDO_INSIDE_IF()
+|	"FOR"< IDENTIFICADOR>"<-"EXPRESSAO_MATEMATICA() "TO"(LOOKAHEAD(2)EXPRESSAO_LOGICA()|EXPRESSAO_MATEMATICA())COMANDO()
+| 	"<<" 
+}
+void COMANDO_INSIDE_IF():
+{}
+{
+	<IDENTIFICADOR> "<-" EXPRESSAO_MATEMATICA()";"COMANDO_INSIDE_IF()
+| 	"IF"EXPRESSAO_LOGICA() "THEN" COMANDO_INSIDE_IF()"ELSE"COMANDO_INSIDE_IF()
+|	"FOR"< IDENTIFICADOR>"<-"EXPRESSAO_MATEMATICA() "TO"(LOOKAHEAD(2)EXPRESSAO_LOGICA()|EXPRESSAO_MATEMATICA())COMANDO_INSIDE_IF()
+| 	";" 
+}

@@ -1,0 +1,63 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = true;}PARSER_BEGIN(Adder)package JavaCC.Adder;
+
+public class Adder
+{
+  public static void main(String args []) throws ParseException
+  {
+    
+    Adder parser = new Adder(System.in);
+	while(true) {
+	  	try {
+	  	 	System.out.println("INSIRA SUA EXPRESSÃO");
+	  		parser.Start();
+	  		System.out.println("Expressao deu boa!");
+	  		
+	 	}
+	 	catch(Exception e) {
+			//System.out.println(e.getMessage());
+			System.out.println("Dado invalido");
+	 	}
+	 	catch(Error e) {
+			//System.out.println(e.getMessage());
+			System.out.println("Dado Invalido");
+	 	}
+	 	finally { 
+	 		parser.ReInit(System.in);
+	 	}
+	}
+  }
+}
+
+PARSER_END(Adder)
+
+SKIP :
+{
+  " "
+}
+
+TOKEN :
+{
+	< NUMBER : (["0"-"9"])+ >
+}
+
+TOKEN :
+{
+	< OPERADOR : < SOMA > | < SUBTRACAO > | < DIVISAO > | < MULTIPLICACAO> | <PARENT > | < PARENTE > >
+
+}
+
+TOKEN :
+{
+	< #SOMA: "+" > | < #SUBTRACAO: "-" > | < #DIVISAO: "/" > | < #MULTIPLICACAO: "*" > | <  #PARENT: "(" >
+| < #PARENTE : ")" >
+}
+
+void Start() : { }
+{
+  < NUMBER >(
+	< OPERADOR ><NUMBER >
+  )*("\n"|"\r"|"\t")
+}
+
